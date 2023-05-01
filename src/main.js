@@ -2,7 +2,7 @@
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   const history = [];
-  const path = [];
+  const paths = new Map();
   const keys = new Map();
   const removedPaths = [];
   const commandQueue = [];
@@ -63,18 +63,25 @@
   window.onresize = () => resizeCanvas(innerWidth, innerHeight);
   window.onpointermove = (e) => {
     if (pointerDown) {
-      if (path.length) {
-        line(path[path.length - 2], path[path.length - 1], e.clientX, e.clientY);
-      }
-      path.push(e.clientX, e.clientY)
+      paths.forEach((path, pointerId) => {
+        if (e.pointerId != pointerId) return;
+        if (path.length) {
+          line(path[path.length - 2], path[path.length - 1], e.clientX, e.clientY);
+        }
+        path.push(e.clientX, e.clientY);
+      });
     };
   };
-  window.onpointerdown = () => pointerDown = true;
-  window.onpointerup = () => {
+  window.onpointerdown = (e) => {
+    pointerDown = true;
+    paths.set(e.pointerId, []);
+  };
+  window.onpointerup = (e) => {
+    let path = paths.get(e.pointerId);
     if (path.length) {
       history.push(path.slice());
-      path.splice(0);
     }
+    paths.delete(e.pointerId);
     pointerDown = false;
   };
   window.onkeydown = (e) => {
