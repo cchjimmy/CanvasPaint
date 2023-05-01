@@ -91,9 +91,9 @@
   function pushCommands(keys) {
     let command;
 
-    if (keys.get('MetaLeft') && keys.get('KeyZ') && keys.get('ShiftLeft')) {
+    if (keys.get('ControlLeft') && keys.get('KeyY')) {
       command = redo;
-    } else if (keys.get('MetaLeft') && keys.get('KeyZ')) {
+    } else if (keys.get('ControlLeft') && keys.get('KeyZ')) {
       command = undo;
     } else if (keys.get("Escape")) {
       command = clear;
