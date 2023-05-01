@@ -39,7 +39,6 @@
     drawHistory();
   }
   function strokePath(path) {
-    if (!path) return;
     ctx.beginPath();
 
     ctx.moveTo(path[0], path[1]);
