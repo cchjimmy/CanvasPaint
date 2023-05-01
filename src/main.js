@@ -110,13 +110,15 @@
   }
   function undo() {
     let path = history.pop();
-    if (path) removedPaths.push(path);
+    if (!path) return;
+    removedPaths.push(path);
     drawHistory();
   }
   function redo() {
     let path = removedPaths.pop();
-    if (path) history.push(path);
-    drawHistory();
+    if (!path) return;
+    history.push(path);
+    strokePath(path);
   }
   function clear() {
     background();
