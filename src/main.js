@@ -71,6 +71,7 @@
   };
   window.onpointerdown = (e) => {
     paths.set(e.pointerId, []);
+    removedPaths.splice(0);
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
