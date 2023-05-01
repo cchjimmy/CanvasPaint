@@ -8,13 +8,11 @@
   const commandQueue = [];
   var pointerDown = false;
   const config = {
-    background: "black",
-    color: "white",
-    ctx: {
-      lineWidth: 5,
-      lineCap: "round",
-      lineJoin: "round"
-    }
+    fillStyle: "black",
+    strokeStyle: "white",
+    lineWidth: 5,
+    lineCap: "round",
+    lineJoin: "round"
   }
   main();
   function main() {
@@ -35,10 +33,10 @@
   function resizeCanvas(w, h) {
     canvas.width = w;
     canvas.height = h;
-    for (prop in config.ctx) {
-      ctx[prop] = config.ctx[prop];
-      console.log(ctx[prop]);
+    for (prop in config) {
+      ctx[prop] = config[prop];
     }
+    drawHistory();
   }
   function strokePath(path) {
     if (!path) return;
