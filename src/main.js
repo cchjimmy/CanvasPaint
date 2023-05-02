@@ -67,15 +67,13 @@
     connect(path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
   };
   window.onpointerdown = (e) => {
+    removedPaths.splice(0);
     if (paths.size > 0) return;
     paths.set(e.pointerId, [e.clientX, e.clientY]);
-    removedPaths.splice(0);
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
-    if (path) {
-      history.push(path);
-    }
+    if (path) history.push(path);
     paths.delete(e.pointerId);
   };
   window.onkeydown = (e) => {
