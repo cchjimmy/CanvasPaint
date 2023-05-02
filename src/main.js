@@ -5,7 +5,6 @@
   const paths = new Map();
   const keys = new Map();
   const removedPaths = [];
-  const commandQueue = [];
   const config = {
     fillStyle: "white",
     strokeStyle: "white",
@@ -36,16 +35,15 @@
     // credit: https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
     // move to the first point
     ctx.moveTo(path[0], path[1]);
-    
+
     let i;
-    for (i = 2; i < path.length - 4; i+=2)
-    {
-      var xc = (path[i] + path[i+2]) / 2;
-      var yc = (path[i+1] + path[i+3]) / 2;
-      ctx.quadraticCurveTo(path[i], path[i+1], xc, yc);
+    for (i = 2; i < path.length - 4; i += 2) {
+      var xc = (path[i] + path[i + 2]) / 2;
+      var yc = (path[i + 1] + path[i + 3]) / 2;
+      ctx.quadraticCurveTo(path[i], path[i + 1], xc, yc);
     }
     // curve through the last two points
-    ctx.quadraticCurveTo(path[i], path[i+1], path[i + 2], path[i + 3]);
+    ctx.quadraticCurveTo(path[i], path[i + 1], path[i + 2], path[i + 3]);
 
     ctx.stroke();
   }
@@ -66,15 +64,16 @@
     let path = paths.get(e.pointerId);
     if (!path) return;
     path.push(e.clientX, e.clientY);
-    connect(path[path.length-4], path[path.length-3], path[path.length - 2], path[path.length - 1]);
+    connect(path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
   };
   window.onpointerdown = (e) => {
-    paths.set(e.pointerId, []);
+    if (paths.size > 0) return;
+    paths.set(e.pointerId, [e.clientX, e.clientY]);
     removedPaths.splice(0);
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
-    if (path.length) {
+    if (path) {
       history.push(path);
     }
     paths.delete(e.pointerId);
