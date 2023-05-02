@@ -19,11 +19,6 @@
     resizeCanvas(innerWidth, innerHeight);
     ctx.strokeStyle = config.color;
     background("black");
-    update();
-  }
-  function update() {
-    executeCommands();
-    requestAnimationFrame(update);
   }
   function background(color) {
     document.body.style.background = color;
@@ -90,27 +85,18 @@
     keys.set(e.code, true);
   }
   window.onkeyup = (e) => {
-    pushCommands(keys);
+    executeCommand(keys);
 
     keys.delete(e.code);
   };
-  function pushCommands(keys) {
-    let command;
-
+  function executeCommand(keys) {
     if (keys.get('ControlLeft') && keys.get('KeyY')) {
-      command = redo;
+      redo();
     } else if (keys.get('ControlLeft') && keys.get('KeyZ')) {
-      command = undo;
+      undo();
     } else if (keys.get("Escape")) {
-      command = clear;
+      clear();
     }
-    if (command) commandQueue.push(command);
-  }
-  function executeCommands() {
-    for (let i = 0; i < commandQueue.length; i++) {
-      commandQueue[i]();
-    }
-    commandQueue.splice(0);
   }
   function undo() {
     let path = history.pop();
