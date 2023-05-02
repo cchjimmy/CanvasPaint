@@ -7,9 +7,9 @@
   const removedPaths = [];
   const commandQueue = [];
   const config = {
-    fillStyle: "black",
+    fillStyle: "white",
     strokeStyle: "white",
-    lineWidth: 5,
+    lineWidth: 3,
     lineCap: "round",
     lineJoin: "round"
   }
@@ -18,16 +18,15 @@
     document.body.appendChild(canvas);
     resizeCanvas(innerWidth, innerHeight);
     ctx.strokeStyle = config.color;
-    background();
+    background("black");
     update();
   }
   function update() {
     executeCommands();
     requestAnimationFrame(update);
   }
-  function background() {
-    ctx.fillStyle = config.background;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  function background(color) {
+    document.body.style.background = color;
   }
   function resizeCanvas(w, h) {
     canvas.width = w;
@@ -39,35 +38,39 @@
   }
   function strokePath(path) {
     ctx.beginPath();
-
+    // credit: https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
+    // move to the first point
     ctx.moveTo(path[0], path[1]);
-    for (let i = 2; i < path.length; i += 2) {
-      ctx.lineTo(path[i], path[i + 1]);
+    
+    let i;
+    for (i = 2; i < path.length - 4; i+=2)
+    {
+      var xc = (path[i] + path[i+2]) / 2;
+      var yc = (path[i+1] + path[i+3]) / 2;
+      ctx.quadraticCurveTo(path[i], path[i+1], xc, yc);
     }
+    // curve through the last two points
+    ctx.quadraticCurveTo(path[i], path[i+1], path[i + 2], path[i + 3]);
 
     ctx.stroke();
   }
-  function line(x1, y1, x2, y2) {
+  function connect(x1, y1, x2, y2) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
   }
   function drawHistory() {
-    background();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < history.length; i++) {
       strokePath(history[i]);
     }
   }
   window.onresize = () => resizeCanvas(innerWidth, innerHeight);
   window.onpointermove = (e) => {
-    paths.forEach((path, pointerId) => {
-      if (e.pointerId != pointerId) return;
-      if (path.length) {
-        line(path[path.length - 2], path[path.length - 1], e.clientX, e.clientY);
-      }
-      path.push(e.clientX, e.clientY);
-    });
+    let path = paths.get(e.pointerId);
+    path.push(e.clientX, e.clientY);
+    connect(path[path.length-4], path[path.length-3], path[path.length - 2], path[path.length - 1]);
   };
   window.onpointerdown = (e) => {
     paths.set(e.pointerId, []);
@@ -121,7 +124,7 @@
     strokePath(path);
   }
   function clear() {
-    background();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     history.splice(0);
     removedPaths.splice(0);
   }
