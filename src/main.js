@@ -73,8 +73,8 @@
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
-    if (path) history.push(path);
     paths.delete(e.pointerId);
+    if (path?.length > 2) history.push(path);
   };
   window.onkeydown = (e) => {
     e.preventDefault();
