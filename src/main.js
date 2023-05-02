@@ -67,14 +67,15 @@
     connect(path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
   };
   window.onpointerdown = (e) => {
+    paths.forEach((path, id) => {
+      saveAndRemovePath(id, path);
+    })
     removedPaths.splice(0);
-    if (paths.size > 0) return;
     paths.set(e.pointerId, [e.clientX, e.clientY]);
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
-    paths.delete(e.pointerId);
-    if (path?.length > 2) history.push(path);
+    saveAndRemovePath(e.pointerId, path);
   };
   window.onkeydown = (e) => {
     e.preventDefault();
@@ -86,6 +87,10 @@
 
     keys.delete(e.code);
   };
+  function saveAndRemovePath(key, path) {
+    if (path?.length > 2) history.push(path);
+    paths.delete(key);
+  }
   function executeCommand(keys) {
     if (keys.get('ControlLeft') && keys.get('KeyY')) {
       redo();
