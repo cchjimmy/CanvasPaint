@@ -82,7 +82,6 @@
     if (path.length) {
       history.push(path);
     }
-    drawHistory();
     paths.delete(e.pointerId);
   };
   window.onkeydown = (e) => {
