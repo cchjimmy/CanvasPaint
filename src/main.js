@@ -69,6 +69,7 @@
   window.onresize = () => resizeCanvas(innerWidth, innerHeight);
   window.onpointermove = (e) => {
     let path = paths.get(e.pointerId);
+    if (!path) return;
     path.push(e.clientX, e.clientY);
     connect(path[path.length-4], path[path.length-3], path[path.length - 2], path[path.length - 1]);
   };
@@ -81,6 +82,7 @@
     if (path.length) {
       history.push(path);
     }
+    drawHistory();
     paths.delete(e.pointerId);
   };
   window.onkeydown = (e) => {
