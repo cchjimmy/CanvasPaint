@@ -104,12 +104,10 @@
     keys.delete(e.code);
   };
   function saveAndRemovePath(key, path) {
-
-    
     if (path?.length > 2) {
       history.push(path);
       // connect to last point
-      quadratic(last[0], last[1], path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
+      connect(last[0], last[1], path[path.length - 2], path[path.length - 1]);
     }
     paths.delete(key);
   }
