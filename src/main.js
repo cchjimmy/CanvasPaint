@@ -91,6 +91,7 @@
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
+    if (path) path.push(e.clientX, e.clientY);
     saveAndRemovePath(e.pointerId, path);
   };
   window.onkeydown = (e) => {
@@ -107,7 +108,7 @@
     if (path?.length > 2) {
       history.push(path);
       // connect to last point
-      connect(last[0], last[1], path[path.length - 2], path[path.length - 1]);
+      quadratic(last[0], last[1], path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
     }
     paths.delete(key);
   }
