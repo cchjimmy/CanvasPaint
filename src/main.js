@@ -8,10 +8,11 @@
   const config = {
     fillStyle: "white",
     strokeStyle: "white",
-    lineWidth: 3,
+    lineWidth: 1,
     lineCap: "round",
     lineJoin: "round"
   }
+  const last = [];
   main();
   function main() {
     document.body.appendChild(canvas);
@@ -53,6 +54,12 @@
     ctx.lineTo(x2, y2);
     ctx.stroke();
   }
+  function quadratic(x1, y1, x2, y2, x3, y3) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.quadraticCurveTo(x2, y2, x3, y3);
+    ctx.stroke();
+  }
   function drawHistory() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < history.length; i++) {
@@ -64,14 +71,23 @@
     let path = paths.get(e.pointerId);
     if (!path) return;
     path.push(e.clientX, e.clientY);
-    connect(path[path.length - 4], path[path.length - 3], path[path.length - 2], path[path.length - 1]);
+    
+    let xc = (path[path.length-4] + e.clientX) * 0.5;
+    let yc = (path[path.length-3] + e.clientY) * 0.5;
+    
+    quadratic(last[0], last[1], path[path.length - 4], path[path.length - 3], xc, yc);
+    
+    last[0] = xc;
+    last[1] = yc;
   };
   window.onpointerdown = (e) => {
     paths.forEach((path, id) => {
       saveAndRemovePath(id, path);
     })
     removedPaths.splice(0);
-    paths.set(e.pointerId, [e.clientX, e.clientY]);
+    last[0] = e.clientX;
+    last[1] = e.clientY;
+    paths.set(e.pointerId, [last[0], last[1]]);
   };
   window.onpointerup = (e) => {
     let path = paths.get(e.pointerId);
