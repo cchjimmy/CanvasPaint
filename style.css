@@ -1,6 +1,10 @@
 html, body {
   margin: 0px;
   overflow: hidden;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
   user-select: none;
+  -ms-touch-action: none;
   touch-action: none; /* https://stackoverflow.com/questions/48124372/pointermove-event-not-working-with-touch-why-not */
 }
